@@ -1,7 +1,4 @@
-flask
-gunicorn
-numpy
-pandas
+gradio
 tensorflow
-scikit-learn
-opencv-python
+numpy
+Pillow
