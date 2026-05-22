@@ -1,0 +1,559 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Aplikasi Klasifikasi Motif Batik Nusantara</title>
+    <meta name="description" content="Sufee Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="apple-icon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link rel="stylesheet" href="/static/sufeadmin/assets/css/normalize.css">
+    <link rel="stylesheet" href="/static/sufeadmin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/sufeadmin/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/sufeadmin/assets/css/themify-icons.css">
+    <link rel="stylesheet" href="/static/sufeadmin/assets/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/static/sufeadmin/assets/css/cs-skin-elastic.css">
+    <!-- <link rel="stylesheet" href="assets/css/bootstrap-select.less"> -->
+    <link rel="stylesheet" href="/static/sufeadmin/assets/scss/style.css">
+    <link rel="stylesheet" href="/static/sufeadmin/assets/scss/widgets.css">
+    <link href="/static/sufeadmin/assets/css/lib/vector-map/jqvmap.min.css" rel="stylesheet">
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
+
+    <style>
+
+body{
+    background-color:#f4f6f9;
+}
+
+/* =========================
+   CARD BATIK
+========================= */
+
+.card{
+    transition:0.4s;
+    border:none;
+    overflow:hidden;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* =========================
+   GAMBAR
+========================= */
+
+.preview-image{
+    transition:0.4s;
+}
+
+.preview-image:hover{
+    transform:scale(1.05);
+    filter:brightness(0.9);
+}
+
+/* =========================
+   JUDUL
+========================= */
+
+.batik-title{
+    font-weight:bold;
+    color:#2c3e50;
+    font-size:22px;
+}
+
+/* =========================
+   DESKRIPSI
+========================= */
+
+.batik-desc{
+    text-align:justify;
+    color:#555;
+    line-height:1.9;
+    font-size:14px;
+    flex-grow:1;
+}
+
+.batik-card{
+    margin-bottom:25px;
+}
+
+/* =========================
+   CARD HEADER
+========================= */
+
+.section-title{
+    font-weight:bold;
+    color:#34495e;
+}
+
+/* =========================
+   CAROUSEL BUTTON
+========================= */
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon{
+    background-color:rgba(0,0,0,0.5);
+    border-radius:50%;
+    padding:18px;
+}
+
+/* =========================
+   MODAL PREVIEW
+========================= */
+
+.modal-content{
+    background:transparent;
+    border:none;
+}
+
+#modalImage{
+    border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    animation:zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn{
+    from{
+        transform:scale(0.8);
+        opacity:0;
+    }
+
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+::-webkit-scrollbar{
+    width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#888;
+    border-radius:10px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background:#555;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+    <!-- Left Panel -->
+
+    <aside id="left-panel" class="left-panel">
+        <nav class="navbar navbar-expand-sm navbar-default">
+
+            <div class="navbar-header">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu"
+                    aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="./"><img src="/static/sufeadmin/images/logo_batik.png" alt="Logo"></a>
+                <a class="navbar-brand hidden" href="./"><img src="/static/sufeadmin/images/logo_batik2.png" alt="Logo"></a>
+            </div>
+
+            <div id="main-menu" class="main-menu collapse navbar-collapse">
+    <ul class="nav navbar-nav">
+
+        <li>
+            <a href="{{ url_for('main') }}">
+                <i class="menu-icon fa fa-book"></i>
+                Data Batik
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ url_for('classification') }}">
+                <i class="menu-icon fa fa-image"></i>
+                Image Classification
+            </a>
+        </li>
+
+    </ul>
+</div><!-- /.navbar-collapse -->
+        </nav>
+    </aside><!-- /#left-panel -->
+
+    <!-- Left Panel -->
+
+    <!-- Right Panel -->
+
+    <div id="right-panel" class="right-panel">
+
+        <!-- Header-->
+        <header id="header" class="header">
+
+            <div class="header-menu">
+
+                <div class="col-sm-7 d-flex align-items-center">
+
+    <!-- TOGGLE SIDEBAR -->
+    <a id="menuToggle"
+       class="menutoggle pull-left mr-3">
+
+        <i class="fa fa-tasks"></i>
+
+    </a>
+
+    <!-- HEADER CONTENT -->
+    <div class="header-left d-flex align-items-center flex-wrap">
+
+        <!-- JUDUL -->
+        <h4 style="
+            margin:0;
+            margin-right:15px;
+            font-weight:bold;
+            color:#2c3e50;
+        ">
+
+            Sistem Klasifikasi Motif Batik Nusantara
+
+        </h4>
+
+    </div>
+
+</div>
+
+                <div class="col-sm-5">
+                    <div class="user-area dropdown float-right">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </header><!-- /header -->
+        <!-- Header-->
+        <div class="content mt-4">
+
+    <!-- JUDUL -->
+<!-- JUDUL -->
+<div class="row mb-4">
+
+    <div class="col-md-12">
+
+        <div class="card shadow-sm"
+             style="
+                border:none;
+                border-radius:15px;
+                background:linear-gradient(135deg, #2c3e50, #4ca1af);
+             ">
+
+            <div class="card-body text-center py-4">
+
+                <h3 style="
+                    color:white;
+                    font-weight:bold;
+                    margin-bottom:10px;
+                ">
+
+                    <i class="fa fa-paint-brush"></i>
+                    Data Motif Batik Nusantara
+
+                </h3>
+
+                <p style="
+                    color:rgba(255,255,255,0.9);
+                    font-size:14px;
+                    margin-bottom:18px;
+                ">
+
+                    Koleksi motif batik tradisional Indonesia beserta filosofi dan maknanya
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <div class="row mb-4">
+
+    <!-- FILTER -->
+    <div class="col-md-12 mb-3">
+
+        <select id="filterPulau"
+        class="form-control"
+        style="
+            border-radius:10px;
+            height:50px;
+        ">
+
+    <option value="all">Semua Wilayah</option>
+    <option value="sumatera">Sumatera</option>
+    <option value="jawa">Jawa</option>
+    <option value="kalimantan">Kalimantan</option>
+    <option value="sulawesi">Sulawesi</option>
+    <option value="papua">Papua</option>
+    <option value="maluku">Maluku</option>
+    <option value="bali_ntt_ntb">Bali & Nusa Tenggara</option>
+
+</select>
+
+    </div>
+
+</div>
+
+    <!-- CARD BATIK -->
+    <div class="row">
+
+        {% for batik in data_batik %}
+
+        <div class="col-md-4 batik-card"
+     data-pulau="{{ batik.pulau | lower }}">
+
+    <div class="card shadow-sm mb-4 w-100"
+     style="
+        border-radius:15px;
+        overflow:hidden;
+        border:none;
+        display:flex;
+        flex-direction:column;
+        height:100%;
+     ">
+
+                <!-- GAMBAR -->
+                <div style="overflow:hidden;">
+
+                    <!-- CAROUSEL -->
+<div id="carousel{{ loop.index }}"
+     class="carousel slide"
+     data-ride="carousel"
+     data-interval="2500">
+
+    <!-- SLIDE GAMBAR -->
+    <div class="carousel-inner">
+
+        {% for img in batik.gambar %}
+
+        <div class="carousel-item {% if loop.first %}active{% endif %}">
+
+            <img src="{{ img }}"
+     class="d-block w-100 preview-image"
+     data-toggle="modal"
+     data-target="#imageModal"
+     data-image="{{ img }}"
+     style="
+        height:250px;
+        object-fit:cover;
+        cursor:pointer;
+     ">
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- TOMBOL PREV -->
+    <a class="carousel-control-prev"
+       href="#carousel{{ loop.index }}"
+       role="button"
+       data-slide="prev">
+
+        <span class="carousel-control-prev-icon"></span>
+
+    </a>
+
+    <!-- TOMBOL NEXT -->
+    <a class="carousel-control-next"
+       href="#carousel{{ loop.index }}"
+       role="button"
+       data-slide="next">
+
+        <span class="carousel-control-next-icon"></span>
+
+    </a>
+
+</div>
+
+                </div>
+
+                <!-- ISI -->
+                <div class="card-body d-flex flex-column">
+
+                    <!-- NAMA BATIK -->
+                    <h4 class="batik-title">
+    {{ batik.nama }}
+</h4>
+
+<hr>
+
+<p class="batik-desc">
+    {{ batik.filosofi }}
+</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+        <!--/.col-->
+
+
+        <!--/.col-->
+
+
+        <!--/.col-->
+
+
+        <!--/.col-->
+
+
+        <!-- Right Panel -->
+
+        <script src="/static/sufeadmin/assets/js/vendor/jquery-2.1.4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+        <script src="/static/sufeadmin/assets/js/vendor/jquery-2.1.4.min.js"></script>
+        <script src="/static/sufeadmin/assets/js/popper.min.js"></script>
+        <script src="/static/sufeadmin/assets/js/plugins.js"></script>
+        <script src="/static/sufeadmin/assets/js/main.js"></script>
+        <script src="/static/sufeadmin/assets/js/lib/chart-js/Chart.bundle.js"></script>
+
+
+        <script src="/static/sufeadmin/assets/js/lib/chart-js/Chart.bundle.js"></script>
+        <script src="/static/sufeadmin/assets/js/dashboard.js"></script>
+        <script src="/static/sufeadmin/assets/js/widgets.js"></script>
+        <script src="/static/sufeadmin/assets/js/lib/vector-map/jquery.vmap.js"></script>
+        <script src="/static/sufeadmin/assets/js/lib/vector-map/jquery.vmap.min.js"></script>
+        <script src="/static/sufeadmin/assets/js/lib/vector-map/jquery.vmap.sampledata.js">
+        </script>
+        <script src="/static/sufeadmin/assets/js/lib/vector-map/country/jquery.vmap.world.js">
+        </script>
+
+        <script>
+
+$(document).ready(function(){
+
+    $("#filterPulau").on("change", function(){
+
+        var value = $(this).val().toLowerCase();
+
+        $(".batik-card").each(function(){
+
+            var pulau = $(this).attr("data-pulau").toLowerCase();
+
+            if(value === "all" || pulau === value){
+
+                $(this).css("display", "block");
+
+            }else{
+
+                $(this).css("display", "none");
+
+            }
+
+        });
+
+    });
+
+});
+
+</script>
+
+
+        <script>
+            (function ($) {
+                "use strict";
+
+                jQuery('#vmap').vectorMap({
+                    map: 'world_en',
+                    backgroundColor: null,
+                    color: '#ffffff',
+                    hoverOpacity: 0.7,
+                    selectedColor: '#1de9b6',
+                    enableZoom: true,
+                    showTooltip: true,
+                    values: sample_data,
+                    scaleColors: ['#1de9b6', '#03a9f5'],
+                    normalizeFunction: 'polynomial'
+                });
+            })(jQuery);
+        </script>
+
+        <script>
+
+$(document).ready(function(){
+
+    $('.preview-image').click(function(){
+
+        var imgSrc = $(this).attr('data-image');
+
+        $('#modalImage').attr('src', imgSrc);
+
+    });
+
+});
+
+</script>
+
+
+
+        <!-- IMAGE PREVIEW MODAL -->
+<div class="modal fade"
+     id="imageModal"
+     tabindex="-1"
+     role="dialog">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered"
+         role="document">
+
+        <div class="modal-content"
+             style="background:none; border:none;">
+
+            <div class="modal-body text-center">
+
+                <img id="modalImage"
+                     src=""
+                     style="
+                        width:100%;
+                        border-radius:15px;
+                     ">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>
